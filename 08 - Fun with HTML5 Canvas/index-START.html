@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+
+<body>
+  <form>
+    <label for ="width">line width</label>
+    <input type="range" id="width" name="width" value ="0" min="0" max="100"/>
+    <label for="color">color</label>
+    <input type='color' id='color' value="#BADA55"/>
+  </form>
+  <canvas id="draw" width="800" height="800"></canvas>
+  <script>
+    let canvas = document.querySelector('#draw');
+    let context = canvas.getContext('2d');
+    let widthBar = document.querySelector('#width');
+    let colorPicker = document.querySelector('#color');
+
+    context.width = window.innerWidth;
+    context.height = window.innerHeight;
+
+    context.strokeStyle = '#BADA55';
+    context.lineJoin = 'round';
+    context.lineCap = 'round';
+
+    let drawing =  false;
+    let lastX = 0,lastY = 0;
+    function draw(e){
+      if(!drawing)return;
+      context.beginPath();
+      context.moveTo(lastX,lastY);
+      context.lineTo(e.offsetX,e.offsetY);
+      context.stroke();
+      lastX = e.offsetX;
+      lastY = e.offsetY;
+    }
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mousedown',(e) => {
+      drawing = true;
+      lastX = e.offsetX;
+      lastY = e.offsetY;
+    });
+    function widthBarHandler(e){
+      context.lineWidth = e.target.value;
+    }
+    function colorPickerHandler(e){
+      context.strokeStyle = e.target.value;
+    }
+    canvas.addEventListener('mouseup',() => drawing = false);
+    canvas.addEventListener('mouseout',() => drawing = false);
+    widthBar.addEventListener('change',widthBarHandler);
+    colorPicker.addEventListener('change',colorPickerHandler);
+  </script>
+  <style>
+    html,
+    body {
+      margin: 0;
+    }
+  </style>
+</body>
+
+</html>
